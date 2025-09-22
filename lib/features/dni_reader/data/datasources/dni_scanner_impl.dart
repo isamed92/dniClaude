@@ -17,9 +17,9 @@ class DNIScannerImpl implements DNILocalDataSource {
     // Escuchar los resultados del escaneo
     scannerController.barcodes.listen(
       (barcode) {
-        if (barcode.rawValue != null && !completer.isCompleted) {
+        if (barcode.raw != null && !completer.isCompleted) {
           try {
-            final rawData = barcode.rawValue!;
+            final rawData = barcode.raw!;
 
             // Verificar si es un código PDF417 de DNI argentino
             if (rawData.startsWith('@')) {
@@ -29,14 +29,16 @@ class DNIScannerImpl implements DNILocalDataSource {
             }
           } catch (e) {
             if (!completer.isCompleted) {
-              completer.completeError(ScanException('Error al procesar el código: ${e.toString()}'));
+              completer.completeError(ScanException(
+                  'Error al procesar el código: ${e.toString()}'));
             }
           }
         }
       },
       onError: (error) {
         if (!completer.isCompleted) {
-          completer.completeError(ScanException('Error al escanear: ${error.toString()}'));
+          completer.completeError(
+              ScanException('Error al escanear: ${error.toString()}'));
         }
       },
       cancelOnError: false,
